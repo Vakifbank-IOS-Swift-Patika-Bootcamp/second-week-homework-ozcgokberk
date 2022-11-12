@@ -1,17 +1,22 @@
 import Foundation
 
 protocol CompanyProtocol {
-    func addEmployee(emp: Employee?) -> [Employee?]
-    func paySalary(closure: () -> Void) -> Double
-    func companyExpense(expense: Double) -> Double
-    func addIncome(income: Double) -> Double
+    mutating func addEmployee(emp: Employee?) -> [Employee?]
+    mutating func paySalary(closure: () -> Void) -> Double
+    mutating func companyExpense(expense: Double) -> Double
+    mutating func addIncome(income: Double) -> Double
+    
+    var companyName: String { get set }
+    var foundationYear: Int { get set }
+    var budget: Double { get set }
 }
 
 protocol EmployeeProtocol {
-    func calculateSalary(_ experience: TypeOfEmployee) -> Double
+    var calculatedSalary: Int { get }
 }
 
 enum MaritalStatus {
+    
     case single
     case married
     
@@ -32,52 +37,76 @@ enum TypeOfEmployee: Int {
 }
 
 
-class Company : CompanyProtocol {
+struct Company : CompanyProtocol {
     
-    let companyName: String = "Apple"
-    var foundationYear: Int = 1998
-    var budget: Double = 100000.0
+    var companyName: String = ""
+    var foundationYear: Int
+    var budget: Double
     var employee: Employee?
     var employeeList: [Employee] = []
     
-    func addIncome(income: Double) -> Double {
+    mutating func addIncome(income: Double) -> Double {
         
         budget += income
         return budget
     }
     
-    func companyExpense(expense: Double) -> Double {
+    mutating func companyExpense(expense: Double) -> Double {
         budget -= expense
         return budget
     }
     
-    func addEmployee(emp: Employee?) -> [Employee?] {
+    mutating func addEmployee(emp: Employee?) -> [Employee?] {
         
         for  employee in [emp] {
             employeeList.append(employee!)
         }
         return employeeList
     }
-    
+    //MARK: -Here is where i use CLOSURE
     func paySalary(closure: () -> Void) -> Double {
         
         var newBudget: Double = 0.0
         for i in employeeList {
-            newBudget = budget - i.baseSalary
+            if budget > 0 {
+                newBudget = budget - i.baseSalary
+            } else {
+                print("Payment is  unsuccessful. Budget is under 0")
+            }
         }
         closure()
         return newBudget
     }
-    
 }
 
-class Employee : Company {
+struct Employee  {
     
-    var name: String = ""
-    var age: Int = 0
+    var name: String
+    var age: Int
     var maritalStatus: MaritalStatus?
     var baseSalary: Double = 5000.0
     var experience: TypeOfEmployee?
+    
+    var calculatedSalary: Double {
+        mutating get {
+            switch experience {
+                
+            case .junior:
+                baseSalary = baseSalary * Double(TypeOfEmployee.junior.rawValue) + 1500
+                return baseSalary
+                
+            case .mid:
+                baseSalary = baseSalary * Double(TypeOfEmployee.mid.rawValue) + 3000
+                return baseSalary
+                
+            case .senior:
+                baseSalary = baseSalary * Double(TypeOfEmployee.senior.rawValue) + 5000
+                return baseSalary
+            case .none:
+                return 0.0
+            }
+        }
+    }
     
     init(name: String, age: Int,maritalStatus: MaritalStatus?, experience: TypeOfEmployee?) {
         
@@ -86,37 +115,225 @@ class Employee : Company {
         self.maritalStatus = maritalStatus
         self.experience = experience
     }
-    
-    func calculateSalary(_ experience: TypeOfEmployee) -> Double {
-        switch experience {
-            
-        case .junior:
-            baseSalary = baseSalary * Double(TypeOfEmployee.junior.rawValue) + 1500
-            return baseSalary
-            
-        case .mid:
-            baseSalary = baseSalary * Double(TypeOfEmployee.mid.rawValue) + 3000
-            return baseSalary
-            
-        case .senior:
-            baseSalary = baseSalary * Double(TypeOfEmployee.senior.rawValue) + 5000
-            return baseSalary
-        }
-    }
-    
+        
     
 }
-var company = Company()
+var company = Company(companyName: "Apple", foundationYear: 1998, budget: 100000)
 company.addIncome(income: 10000.0)
 company.companyExpense(expense: 50000.0)
-print("New budget after the income and expense balance is calculated:  \(company.budget)")
+print("A new budget after the income and expense balance is calculated:  \(company.budget)")
 company.addEmployee(emp: Employee(name: "Gökberk", age: 24, maritalStatus: .single, experience: .junior))
-company.employeeList[0].maritalStatus?.descripton
-company.employeeList[0].age
-company.employeeList[0].calculateSalary(company.employeeList[0].experience!)
+company.addEmployee(emp: Employee(name: "Sinem", age: 24, maritalStatus: .married, experience: .mid))
+company.employeeList[0].calculatedSalary
+company.employeeList[1].calculatedSalary
 company.employeeList
 company.paySalary {
     print("You can do whatever you want here.")
 }
 
+
+print("------------------------------------------------Question 2 ------------------------------------------------")
+
+protocol ZooProtocol {
+    var dailyWaterLimit: Int! { get set }
+    var zooBudget: Int! { get set }
+    mutating func addKeeper(zooKeeper: ZooKeeper?) -> [ZooKeeper?]
+}
+
+protocol ZooKeeperProtocol {
+    var baseSalary: Int { get set }
+    var responsibleOfAnimals: [Animal] { get set }
+}
+
+protocol AnimalProtocol {
+    var voice: String! { get set }
+    var animalCanDrink: Int! { get set }
+}
+
+class Zoo: ZooProtocol {
+    
+    var dailyWaterLimit: Int!
+    var zooBudget: Int!
+    var zooKeeperList: [ZooKeeper] = []
+    var animalList: [Animal]?
+    var newBudget: Int = 0
+    
+    init(dailyWaterLimit: Int, zooBudget: Int) {
+        self.dailyWaterLimit = dailyWaterLimit
+        self.zooBudget = zooBudget
+    }
+    
+    func addBudget (income: Int) -> Int {
+        
+        zooBudget! += income
+        return zooBudget!
+    }
+    
+    func decreaseBudget (expense: Int) -> Int {
+        
+        if zooBudget > 0 {
+            zooBudget! -= expense
+        } else {
+            "There is no money left in zoo vault."
+        }
+
+        return zooBudget!
+    }
+    
+    func addWaterLimit (addWaterLimit: Int) -> Int {
+        
+        dailyWaterLimit! += addWaterLimit
+        return dailyWaterLimit!
+    }
+    
+    func decreaseWaterLimit (decreaseWaterLimit: Int) -> Int {
+        if dailyWaterLimit > 0 {
+            dailyWaterLimit! -= decreaseWaterLimit
+        } else {
+            "There is no water in tank."
+        }
+        
+        return dailyWaterLimit!
+    }
+
+    //MARK: -Here is where i use CLOSURE
+    
+    let newZooBudget: (Int, Int) -> Int = { (value1, value2) in
+        return value1 - value2
+    }
+    
+    func calculateTotalSalary() -> Int {
+        
+        for keeper in zooKeeperList {
+            
+            newBudget += keeper.baseSalary
+        }
+        return newBudget
+    }
+
+
+    func calculateNewWaterLimit() {
+        
+        for animal in animalList! {
+            decreaseWaterLimit(decreaseWaterLimit: animal.animalCanDrink)
+        }
+    }
+
+    func addKeeper(zooKeeper: ZooKeeper?) -> [ZooKeeper?] {
+        
+        for  keeper in [zooKeeper] {
+            zooKeeperList.append(keeper!)
+        }
+        return zooKeeperList
+    }
+    
+}
+
+class ZooKeeper: ZooKeeperProtocol {
+    
+    var baseSalary: Int = 3000
+    var responsibleOfAnimals: [Animal]
+    var keeperName: String!
+    var zoo: Zoo?
+    init(keeperName: String, responsibleOfAnimals: [Animal] ) {
+        
+        self.keeperName = keeperName
+        self.responsibleOfAnimals = responsibleOfAnimals
+    }
+    //MARK: - Computed Property
+    var calculatedSalary: Int {
+        baseSalary += responsibleOfAnimals.count * 5000
+        return baseSalary
+    }
+    
+    func addAnimalToKeeper(animal: Animal) {
+        
+        responsibleOfAnimals.append(animal)
+    }
+    
+    func keeperAnimals() {
+        for i in 0..<responsibleOfAnimals.count {
+            print ("animals that \(keeperName!) is responsible:  \(responsibleOfAnimals[i].name!)"  )
+        }
+    }
+        
+}
+
+class Animal: AnimalProtocol {
+    var voice: String!
+    var animalCanDrink: Int!
+    var keeper: ZooKeeper
+    var name: String!
+    init(voice: String, animalCanDrink: Int, keeper: ZooKeeper, name:String) {
+        
+        self.voice = voice
+        self.animalCanDrink = animalCanDrink
+        self.keeper = keeper
+        self.name = name
+    }
+    
+    func makeNoise() -> String {
+        
+        return voice
+    }
+    
+    func whoIsMyKeeper() -> String {
+        return ("Keeper name is: \(keeper.keeperName!)")
+    }
+    
+    func animalDrunkWater() {
+        
+        if zoo.dailyWaterLimit > 0 {
+            zoo.dailyWaterLimit -= animalCanDrink
+        } else {
+            print("There is no water left in water tank.")
+        }
+    }
+    
+}
+
+class Bird : Animal {
+    
+}
+class Leo : Animal {
+    
+}
+class Dog : Animal {
+    
+}
+
+let zoo = Zoo(dailyWaterLimit: 5000, zooBudget: 100000)
+zoo.dailyWaterLimit
+var keeperOneAnimalArr: [Animal] = []
+var keeperTwoAnimalArr: [Animal] = []
+let keeperOne = ZooKeeper( keeperName: "Gökberk", responsibleOfAnimals: keeperOneAnimalArr)
+
+let keeperTwo = ZooKeeper(keeperName: "Dogukan", responsibleOfAnimals: keeperTwoAnimalArr)
+zoo.addKeeper(zooKeeper: keeperOne)
+zoo.addKeeper(zooKeeper: keeperTwo)
+zoo.zooKeeperList
+let bird = Bird(voice: "Cik cik", animalCanDrink: 500, keeper: keeperOne, name:"Kartal")
+let lion = Leo(voice: "Roar", animalCanDrink: 200, keeper: keeperOne, name: "Aslan")
+let dog = Dog(voice: "hav hav", animalCanDrink: 400, keeper: keeperTwo, name: "Terrier")
+keeperOne.addAnimalToKeeper(animal: bird)
+keeperOne.addAnimalToKeeper(animal: lion)
+keeperTwo.addAnimalToKeeper(animal: dog)
+keeperOne.calculatedSalary
+keeperTwo.calculatedSalary
+zoo.zooKeeperList
+
+keeperOne.keeperAnimals()
+bird.animalDrunkWater()
+zoo.dailyWaterLimit
+zoo.addWaterLimit(addWaterLimit: 5000)
+
+lion.whoIsMyKeeper()
+lion.makeNoise()
+
+dog.whoIsMyKeeper()
+dog.makeNoise()
+
+keeperTwo.keeperAnimals()
+zoo.calculateTotalSalary()
+zoo.newZooBudget(zoo.zooBudget,zoo.newBudget)
 

@@ -19,14 +19,14 @@
 --
 
 - Bahçemizde hayvanlarımız, bakıcılarımız olacak.
-- Hayvanat bahçemizin hem bir günlük su limiti hem de bit bütçesi olacak.
-- Hayvanat bahçesine gelir, gider eklemesi ve su limiti artırma yapılabilmelidir.
-- Hayvanların su tüketimleri, sesleri olmalı
-- Her hayvanın tek bakıcısı olmalıdır ancak bakıcılar birden fazla hayvana bakabilmelidir.
-- Bulunan hayvanların su tüketimleri günlük limitten düşmelidir.
-- Bakıcıların maaş ödemelerini yapılabilmeli. Hesap formulü kararı size bırakılmıştır.
-- Sonradan bakıcı ve hayvan eklemesi yapılabilmelidir. 
-- Aynı hayvandan 1 den fazla olabilmelidir.
+- Hayvanat bahçemizin hem bir günlük su limiti hem de bir bütçesi olacak.✅
+- Hayvanat bahçesine gelir, gider eklemesi ve su limiti artırma yapılabilmelidir.✅
+- Hayvanların su tüketimleri, sesleri olmalı✅
+- Her hayvanın tek bakıcısı olmalıdır ancak bakıcılar birden fazla hayvana bakabilmelidir.✅
+- Bulunan hayvanların su tüketimleri günlük limitten düşmelidir.✅
+- Bakıcıların maaş ödemelerini yapılabilmeli. Hesap formulü kararı size bırakılmıştır.✅
+- Sonradan bakıcı ve hayvan eklemesi yapılabilmelidir.✅ 
+- Aynı hayvandan 1 den fazla olabilmelidir.✅
 - Protocol, closure, optional, computed property kullanımı zorunludur.
 
 3- Pragmatic Programmer 5,6,7 chapterlar özetlenmelidir.
