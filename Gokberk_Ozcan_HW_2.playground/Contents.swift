@@ -252,8 +252,12 @@ class ZooKeeper: ZooKeeperProtocol {
     }
     
     func keeperAnimals() {
-        for i in 0..<responsibleOfAnimals.count {
-            print ("animals that \(keeperName!) is responsible:  \(responsibleOfAnimals[i].name!)"  )
+        if responsibleOfAnimals.count > 0 {
+            for i in 0..<responsibleOfAnimals.count {
+                print ("animals that \(keeperName!) is responsible:  \(responsibleOfAnimals[i].name!)"  )
+            }
+        } else {
+            "There is no animal that this keeper responsible of."
         }
     }
         
